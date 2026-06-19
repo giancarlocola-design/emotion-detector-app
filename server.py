@@ -7,9 +7,9 @@ app = Flask(__name__)
 
 @app.route("/emotionDetector")
 def emot_detector():
-    """Riceve il testo inviato dall'interfaccia web, lo analizza tramite
+    """Riceve il testo inviato dall'interfaccia web, lo analizza e gestisce
 
-    emotion_detector e restituisce il messaggio formattato per l'utente.
+    la visualizzazione degli errori in caso di input vuoto.
     """
     # Lettura dell'input inviato dal form web (parametro textToAnalyze)
     text_to_analyze = request.args.get("textToAnalyze")
@@ -17,11 +17,11 @@ def emot_detector():
     # Esecuzione dell'analisi delle emozioni
     response = emotion_detector(text_to_analyze)
 
-    # Gestione di sicurezza preliminare se la risposta non è valida
-    if isinstance(response, str) or response.get("dominant_emotion") is None:
+    # Gestione specifica dell'errore per input vuoto o non valido (quando dominant_emotion è None)
+    if response.get("dominant_emotion") is None:
         return "Invalid text! Please try again!"
 
-    # Costruzione del messaggio di output testuale richiesto dalle specifiche
+    # Costruzione del messaggio di output in caso di successo
     output_message = (
         f"For the given statement, the system response is "
         f"'anger': {response['anger']}, 'disgust': {response['disgust']}, "
